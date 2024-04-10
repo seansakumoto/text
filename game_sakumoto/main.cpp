@@ -1,18 +1,35 @@
 #include "DxLib.h"
+#include"SceneManager.h"
 
-// プログラムは WinMain から始まります
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+//メイン関数(プログラムはここから始まります)
+int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrecInstance,
+	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
-	if (DxLib_Init() == -1)		// ＤＸライブラリ初期化処理
+
+	//例外処理(以上が発生したら、cat ch文に飛ぶ)
+	try
 	{
-		return -1;			// エラーが起きたら直ちに終了
+		//シーンマネージャー機能の生成
+		SceneManager manager;
+
+		//シーンマネジャー機能の初期化処理
+		manager.Initialize();
+
+		//シーンマネジャー機能の更新処理
+		manager.Update();
+
+		//シーンマネジャー機能の終了時処理
+		manager.Finalize();
+	}
+	catch (const char* err_log)
+	{
+		//エラー発生内容の出力
+		OutputDebugString(err_log);
+
+		//エラー終了を通知
+		return -1;
 	}
 
-	DrawPixel(320, 240, GetColor(255, 255, 255));	// 点を打つ
-
-	WaitKey();				// キー入力待ち
-
-	DxLib_End();				// ＤＸライブラリ使用の終了処理
-
-	return 0;				// ソフトの終了 
+	//正常終了を通知
+	return 0;
 }
